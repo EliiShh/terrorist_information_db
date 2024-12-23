@@ -1,6 +1,8 @@
-from app.db.psql.models import Base, event_group
+from . import Base
 from sqlalchemy import Column, Integer, String, Float, Date, Table, ForeignKey
 from sqlalchemy.orm import relationship
+
+from .event_group_model import event_group
 
 
 class Group(Base):

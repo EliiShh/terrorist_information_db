@@ -1,7 +1,7 @@
-from app.db.psql.models import Base, event_attacktype
+from . import Base
 from sqlalchemy import Column, Integer, String, Float, Date, Table, ForeignKey
 from sqlalchemy.orm import relationship
-
+from .event_attacktype_model import event_attacktype
 
 
 class AttackType(Base):
