@@ -44,3 +44,5 @@ def route_get_yearly_attack_change(limit):
     yearly_attack_change_to_map(select_result)
     return render_template('map.html')
 
+
+
