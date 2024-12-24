@@ -4,7 +4,6 @@ from app.utils.csv_utils import convert_date, read_csv_to_df
 import datetime
 
 
-
 def get_lat_lon(city, country_name):
     geolocator = Photon(user_agent="geoapiExercises")
     try:
@@ -13,6 +12,7 @@ def get_lat_lon(city, country_name):
     except:
         location = geolocator.geocode(country_name)
         return {"type": "countries", "lat":location.latitude, "lon":location.longitude}
+
 
 def fill_missing_lat_lon(df):
     missing_lat_lon = df[df['latitude'].isna() | df['longitude'].isna()]
@@ -59,6 +59,7 @@ def normalization_csv(path):
         'region_txt': str,
         'gname': str,
         'city': str,
+        'summary': str
     }
     df = read_csv_to_df(path, dtypes)
     df['date'] = df.apply(convert_date, axis=1)
@@ -73,9 +74,13 @@ def normalization_csv(path):
 
     columns_to_update_unknown = [
         "country_txt", "region_txt", "city", "attacktype1_txt", "attacktype2_txt", "attacktype3_txt",
-        "targtype1_txt", "targtype2_txt", "targtype3_txt", "gname", "gname2", "gname3"
+        "targtype1_txt", "targtype2_txt", "targtype3_txt", "gname", "gname2", "gname3", 'summary'
     ]
     df[columns_to_update_unknown] = df[columns_to_update_unknown].replace("Unknown", np.nan)
+    df[columns_to_update_unknown] = df[columns_to_update_unknown].replace("", np.nan)
+    df[columns_to_update_unknown] = df[columns_to_update_unknown].replace(" ", np.nan)
+
+
     df = fill_missing_lat_lon(df)
     columns_to_update_smaller_than_0 = ['nperps', 'nkill', 'nwound']
     df[columns_to_update_smaller_than_0] = df[columns_to_update_smaller_than_0].where(
@@ -83,7 +88,7 @@ def normalization_csv(path):
     print(f"The normalization was successfully completed. time:{datetime.datetime.now() - time_start}")
     return df
 
-#
+# #
 # df = normalization_csv("../data/globalterrorismdb_0718dist-1000 rows.csv")
 # # # "iyear","country_txt","region_txt","city","latitude","longitude","attacktype1_txt","attacktype2_txt",'attacktype3_txt','targtype1_txt','targtype2_txt','targtype3_txt','gname','gname2','gname3','nperps','nkill','nwound'
 # print(df["latitude"])

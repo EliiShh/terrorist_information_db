@@ -1,9 +1,10 @@
-from app.repo.psql_repo.analaze_qurys import get_regions_for_names, get_loc_for_region, \
-    get_most_active_groups_in_region, get_yearly_attack_change_by_region, get_damage_percentage
+from app.repo.psql_repo.event_repo import get_yearly_attack_change_by_region
+from app.repo.psql_repo.grop_repo import get_most_active_groups_in_region
+from app.repo.psql_repo.region_repo import get_loc_for_region, get_all_regions, get_damage_percentage
 
 
 def get_most_active_groups_for_regions():
-    regions = get_regions_for_names()
+    regions = get_all_regions()
     all_groups_most_active_by_regions = []
     for reg in regions:
         loc = get_loc_for_region(reg)
@@ -12,7 +13,7 @@ def get_most_active_groups_for_regions():
 
 
 def get_yearly_attack_change(limit = None):
-    regions = get_regions_for_names()
+    regions = get_all_regions()
     all_yearly_by_regions = []
     for reg in regions:
         loc = get_loc_for_region(reg)

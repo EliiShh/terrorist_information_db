@@ -1,5 +1,6 @@
 from datetime import datetime
 import pandas as pd
+import numpy as np
 import ast
 
 
@@ -20,6 +21,7 @@ def convert_date(row):
     return datetime(row['iyear'], row['imonth'], row['iday'])
 
 
+
 def convert_to_datetime(date_str):
     return datetime.strptime(date_str, '%d-%b-%y')
 
@@ -32,16 +34,16 @@ def normalize_date(date_str, y= datetime.now().year):
 
 
 def convert_groq_to_dict(stri):
-    try:
-        start_index = stri.find("{")
-        end_index = stri.rfind("}")
-        if start_index != -1 and end_index != -1:
-            dict_str = stri[start_index:end_index + 1]
-            try:
-                n = ast.literal_eval(dict_str)
-                r, t = n['region_txt'], n['targtype_txt']
-                return {'region_txt': n.get('region_txt'), 'targtype_txt': n.get('targtype_txt')}
-            except (ValueError, SyntaxError, KeyError, Exception):
-                return {'region_txt': None, 'targtype_txt': None}
-    except (ValueError, SyntaxError, KeyError, Exception):
-        return {'region_txt': None, 'targtype_txt': None}
+    start_index = stri.find("{")
+    end_index = stri.rfind("}")
+    if start_index != -1 and end_index != -1:
+        dict_str = stri[start_index:end_index + 1]
+        try:
+            n = ast.literal_eval(dict_str)
+            r, t = n['region_txt'], n['targtype_txt']
+            return {'region_txt': n.get('region_txt'), 'targtype_txt': n.get('targtype_txt')}
+        except (ValueError, SyntaxError, KeyError, Exception):
+            return {'region_txt': np.nan, 'targtype_txt': np.nan}
+    return {'region_txt': np.nan, 'targtype_txt': np.nan}
+
+
