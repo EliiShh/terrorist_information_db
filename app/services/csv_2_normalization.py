@@ -38,7 +38,7 @@ def fill_missing_lat_lon(df):
 
         df.at[row.Index, 'latitude'] = lat_lon['lat']
         df.at[row.Index, 'longitude'] = lat_lon['lon']
-
+        print(lat_lon)
     return df
 
 
@@ -114,8 +114,8 @@ def normalize_csv2(file_path):
     df[columns_to_check] = df[columns_to_check].replace("Unknown", np.nan)
     df[columns_to_check] = df[columns_to_check].replace("Other", np.nan)
     df = df.drop_duplicates(subset=columns_to_check, keep='first')
-    df = region_and_target_type(df.iloc[801:1201])
-
+    # df = region_and_target_type(df.iloc[801:1201])
+    df = region_and_target_type(df)
     df = fill_missing_lat_lon(df)
     df.rename(columns={"Country": "country_txt", 'City': 'city', 'Weapon': 'attacktype1_txt', 'Date': 'date', 'Perpetrator': 'gname',
                        'Fatalities': 'nkill', 'Injuries': 'nwound', 'Description': "summary"}, inplace=True)

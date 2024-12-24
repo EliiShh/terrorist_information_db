@@ -12,7 +12,6 @@ def cooperation_between_groups():
         [groups.append([g.group_name for g in r.groups]) for r in q]
     return groups
 
-print(cooperation_between_groups())
 
 
 
@@ -38,31 +37,7 @@ def groups_that_attacked_targets_frequently():
         {'group_name': row[0], 'target_type': row[1], 'attack_count': row[2]}
         for row in result.fetchall()
     ]
-#
-# results = groups_that_attacked_targets_frequently()
-# for item in results:
-#     print(item)
 
 
 
 
-#שאלה 13
-"""""
- SELECT
-                eg.event_id,
-                MAX(CASE WHEN row_num = 1 THEN g.group_name END) AS group1,
-                MAX(CASE WHEN row_num = 2 THEN g.group_name END) AS group2,
-                MAX(CASE WHEN row_num = 3 THEN g.group_name END) AS group3
-            FROM event_group eg
-            JOIN groups g ON eg.group_id = g.group_id
-            JOIN (
-                SELECT
-                    eg.event_id,
-                    g.group_name,
-                    ROW_NUMBER() OVER (PARTITION BY eg.event_id ORDER BY g.group_name) AS row_num
-                FROM event_group eg
-                JOIN groups g ON eg.group_id = g.group_id
-            ) AS ranked_groups ON eg.event_id = ranked_groups.event_id AND g.group_name = ranked_groups.group_name
-            GROUP BY eg.event_id
-            ORDER BY eg.event_id;
-"""

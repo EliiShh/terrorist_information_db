@@ -5,7 +5,7 @@ import datetime
 
 
 def get_lat_lon(city, country_name):
-    geolocator = Photon(user_agent="geoapiExercises")
+    geolocator = Photon(user_agent="geoapi", timeout=10)
     try:
         location = geolocator.geocode(city)
         return {"type": "cities", "lat":location.latitude, "lon":location.longitude}
@@ -30,9 +30,10 @@ def fill_missing_lat_lon(df):
             if lat_lon["type"] == "cities":
                 cities[city] = lat_lon
             else:
-                cities[country] = lat_lon
+                countries[country] = lat_lon
         df.at[idx, 'latitude'] = lat_lon['lat']
         df.at[idx, 'longitude'] = lat_lon['lon']
+        print(lat_lon)
     return df
 
 

@@ -7,7 +7,7 @@ from app.db.psql.models.group_model import Group
 from app.db.psql.models.location_model import Location
 from app.db.psql.models.region_model import Region
 from app.db.psql.models.target_type_model import TargetType
-from app.services.csv2_normlizaion import normalize_csv2
+from app.services.csv_2_normalization import normalize_csv2
 import datetime
 
 session = session_maker()
@@ -140,7 +140,7 @@ def process_chunk(chunk):
         session.commit()
 
 def main():
-    df = normalize_csv2('../data/RAND_Database_of_Worldwide_Terrorism_Incidents.csv')
+    df = normalize_csv2('../../data/RAND_Database_of_Worldwide_Terrorism_Incidents.csv')
     # chunk_size = 100
     # time_start = datetime.datetime.now()
     # print("Enters the data into psql")

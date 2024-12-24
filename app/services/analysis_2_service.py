@@ -113,7 +113,3 @@ def groups_type_by_region():
          res.append({"region_name":r_name, "latitude": loc[0] , "longitude":loc[1], "count_groups":len(groups) , "groups": groups})
     return res
 
-
-
-
-# print(get_groups_type_by_region("Central America & Caribbean"))

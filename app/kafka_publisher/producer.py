@@ -1,14 +1,11 @@
-# import json
-# import os
 from dotenv import load_dotenv
-# from kafka import KafkaProducer
-#
-load_dotenv(verbose=True)
-
-
 import os
 import json
 from kafka import KafkaProducer
+
+
+load_dotenv(verbose=True)
+
 
 def send_data(topic:str, data:list):
     producer = KafkaProducer(
