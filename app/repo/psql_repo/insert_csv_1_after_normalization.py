@@ -59,12 +59,11 @@ def get_or_create_group(group_name, session):
         session.flush()
     return group
 
+
+
 def get_location(row, session):
-    return session.query(Location).filter(Location.latitude == row['latitude']).first()
-#
-# def get_location(row):
-#     return session.query(Location).filter(Location.latitude == row['latitude'],
-#                                           Location.longitude == row['longitude']).first()
+    return session.query(Location).filter(Location.latitude == row['latitude'],
+                                          Location.longitude == row['longitude']).first()
 
 def process_location(row, session):
     location = get_location(row, session)
@@ -140,7 +139,7 @@ def process_chunk(chunk, session):
 
         session.commit()
 
-def main():
+def insert_csv_1():
     df = normalization_csv('../../data/globalterrorismdb_0718dist.csv')
     chunk_size = 500
     time_start = datetime.datetime.now()
@@ -153,7 +152,7 @@ def main():
     print(f"Data entry completed successfully. time:{datetime.datetime.now() - time_start}")
 
 if __name__ == "__main__":
-    main()
+    insert_csv_1()
 
 
 

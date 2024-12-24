@@ -1,45 +1,10 @@
 import datetime
-
 import numpy as np
-from geopy import Photon
 from app.utils.csv_utils import convert_date, read_csv_to_df, normalize_date, convert_groq_to_dict
 import pandas as pd
 from groq import Groq
 
-
-def get_lat_lon(city, country_name):
-    geolocator = Photon(user_agent="geoapiExercises")
-    try:
-        location = geolocator.geocode(city)
-        return {"type": "cities", "lat":location.latitude, "lon":location.longitude}
-    except:
-        location = geolocator.geocode(country_name)
-        return {"type": "countries", "lat":location.latitude, "lon":location.longitude}
-
-
-def fill_missing_lat_lon(df):
-    cities = {}
-    countries = {}
-    df["latitude"] = None
-    df["longitude"] = None
-    for row in df.itertuples():
-        city = row.City
-        country = row.Country
-        if city in cities:
-            lat_lon = cities[city]
-        elif pd.isna(city) and country in countries:
-            lat_lon = countries[country]
-        else:
-            lat_lon = get_lat_lon(city, country)
-            if lat_lon["type"] == "cities":
-                cities[city] = lat_lon
-            else:
-                countries[country] = lat_lon
-
-        df.at[row.Index, 'latitude'] = lat_lon['lat']
-        df.at[row.Index, 'longitude'] = lat_lon['lon']
-        print(lat_lon)
-    return df
+from app.utils.location_utils import fill_missing_lat_lon
 
 
 def groq_region_and_target(row):
@@ -103,6 +68,7 @@ def normalize_csv2(file_path):
     df.dropna(subset=["City", "Country", "Perpetrator"], how='all', inplace=True)
     columns_to_check = ["City", "Country", "Perpetrator", "Injuries", "Fatalities", "Weapon", "Description"]
     df = df.drop_duplicates(subset=columns_to_check, keep='first')
+
     df['City'] = df['City'].str.title()
     df['Country'] = df['Country'].str.title()
     df['Perpetrator'] = df['Perpetrator'].str.title()
@@ -110,18 +76,18 @@ def normalize_csv2(file_path):
     df['Injuries'] = df['Injuries'].astype(int)
     df['Fatalities'] = df['Fatalities'].astype(int)
     df['Description'] = df['Description'].str.capitalize()
+
     pd.set_option('future.no_silent_downcasting', True)
     df[columns_to_check] = df[columns_to_check].replace("Unknown", np.nan)
     df[columns_to_check] = df[columns_to_check].replace("Other", np.nan)
     df = df.drop_duplicates(subset=columns_to_check, keep='first')
     # df = region_and_target_type(df.iloc[801:1201])
     df = region_and_target_type(df)
-    df = fill_missing_lat_lon(df)
     df.rename(columns={"Country": "country_txt", 'City': 'city', 'Weapon': 'attacktype1_txt', 'Date': 'date', 'Perpetrator': 'gname',
                        'Fatalities': 'nkill', 'Injuries': 'nwound', 'Description': "summary"}, inplace=True)
+    df["latitude"] = np.nan
+    df["longitude"] = np.nan
+    df = fill_missing_lat_lon(df)
     print(f"The normalization was successfully completed. time:{datetime.datetime.now() - time_start}")
     return df
 
-# #
-# normalized_df = normalize_csv2('../data/blabla.csv')
-# print(len(normalized_df))

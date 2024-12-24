@@ -12,13 +12,13 @@ load_dotenv(verbose=True)
 def csvs_to_kafka(df):
     chunk_size = 500
     time_start = datetime.datetime.now()
-    print("Enters the data 2 into kafka")
+    print("Enters the data into kafka")
     df['date'] = df['date'].astype(str)
     for start in range(0, len(df), chunk_size):
         chunk = df.iloc[start:start + chunk_size]
         df_sliced = chunk[['date', 'latitude', 'longitude', 'summary']]
         dict_obj = df_sliced.to_dict(orient='records')
-        topic_name = os.environ['TOPIC_EMAILS_NAME']
+        topic_name = os.environ['TOPIC_INSERT_ELASTIC']
         send_data(topic_name, dict_obj)
         print(start)
     print(f"kafka entry completed successfully. time:{datetime.datetime.now() - time_start}")
@@ -30,18 +30,3 @@ if __name__ == "__main__":
     df = normalization_csv('../data/globalterrorismdb_0718dist.csv')
     csvs_to_kafka(df)
 
-
-
-# def csv_1_to_kafka():
-#     df = normalization_csv('../data/globalterrorismdb_0718dist.csv')
-#     chunk_size = 500
-#     time_start = datetime.datetime.now()
-#     print("Enters the data into kafka")
-#     for start in range(0, len(df), chunk_size):
-#             chunk = df.iloc[start:start + chunk_size]
-#             df_sliced = chunk[['date', 'latitude', 'longitude', 'summary']]
-#             dict_obj = df_sliced.to_dict(orient='records')
-#             topic_name = os.environ['TOPIC_EMAILS_NAME']
-#             send_data(topic_name, dict_obj)
-#             print(start)
-#     print(f"kafka entry completed successfully. time:{datetime.datetime.now() - time_start}")

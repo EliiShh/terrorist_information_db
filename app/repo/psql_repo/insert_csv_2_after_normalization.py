@@ -60,12 +60,10 @@ def get_or_create_group(group_name):
         session.flush()
     return group
 
-def get_location(row):
-    return session.query(Location).filter(Location.latitude == row['latitude']).first()
 
-# def get_location(row):
-#     return session.query(Location).filter(Location.latitude == row['latitude'],
-#                                           Location.longitude == row['longitude']).first()
+def get_location(row):
+    return session.query(Location).filter(Location.latitude == row['latitude'],
+                                          Location.longitude == row['longitude']).first()
 
 
 def process_location(row):
@@ -139,20 +137,21 @@ def process_chunk(chunk):
 
         session.commit()
 
-def main():
+def insert_csv_2():
     df = normalize_csv2('../../data/RAND_Database_of_Worldwide_Terrorism_Incidents.csv')
-    # chunk_size = 100
-    # time_start = datetime.datetime.now()
-    # print("Enters the data into psql")
-    # for start in range(0, len(df), chunk_size):
-    #     chunk = df.iloc[start:start + chunk_size]
-    #     process_chunk(chunk)
-    #     print(start)
-    # session.close()
-    # print(f"Data entry completed successfully. time:{datetime.datetime.now() - time_start}")
+    chunk_size = 100
+    time_start = datetime.datetime.now()
+    print("Enters the data into psql")
+    for start in range(0, len(df), chunk_size):
+        chunk = df.iloc[start:start + chunk_size]
+        process_chunk(chunk)
+        print(start)
+    session.close()
+    print(f"Data entry completed successfully. time:{datetime.datetime.now() - time_start}")
+
 
 if __name__ == "__main__":
-    main()
+    insert_csv_2()
 
 
 

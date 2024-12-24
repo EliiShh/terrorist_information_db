@@ -15,6 +15,8 @@ analysis_blueprint = Blueprint("analysis", __name__)
 @analysis_blueprint.route('/average_percentage_of_casualties_by_region/<int:limit>')
 def route_get_damage_percentage(limit):
     select_result = damage_percentage(limit)
+    if len(select_result) == 0:
+        return jsonify({"error": 'no results average percentage of casualties by region'}), 404
     avg_damage_percentage_to_map(select_result)
     return render_template('map.html')
 
@@ -23,6 +25,8 @@ def route_get_damage_percentage(limit):
 @analysis_blueprint.route('/most_active_groups_for_regions')
 def route_get_most_active_groups_for_regions():
     select_result = get_most_active_groups_for_regions()
+    if len(select_result) == 0:
+        return jsonify({"error": 'no results most active groups for regions'}), 404
     most_active_groups_to_map(select_result)
     return render_template('map.html')
 
@@ -32,6 +36,8 @@ def route_get_most_active_groups_for_regions():
 @analysis_blueprint.route('/yearly_attack_change/<int:limit>')
 def route_get_yearly_attack_change(limit):
     select_result = get_yearly_attack_change(limit)
+    if len(select_result) == 0:
+        return jsonify({"error": 'no results yearly attack change'}), 404
     yearly_attack_change_to_map(select_result)
     return render_template('map.html')
 
@@ -45,6 +51,8 @@ def route_grop_target_type_by_by_location(type_loc):
     else:
         select_result = grop_target_type_by_country()
         grop_target_type_by_country_to_map(select_result)
+    if len(select_result) == 0:
+        return jsonify({"error": 'no results grop target type by loc'}), 404
     return render_template('map.html')
 
 
@@ -60,6 +68,8 @@ def route_common_attack_type_by_location(type_loc):
     else:
         select_result = attack_type_by_country()
         attack_type_by_country_to_map(select_result)
+    if len(select_result) == 0:
+        return jsonify({"error": 'no results common attack type by location'}), 404
     return render_template('map.html')
 
 
@@ -74,6 +84,8 @@ def route_groups_type_by_location_by_location(type_loc):
     else:
         select_result = groups_type_by_country()
         groups_type_by_country_to_map(select_result)
+    if len(select_result) == 0:
+        return jsonify({"error": 'no results groups type by location'}), 404
     return render_template('map.html')
 
 
